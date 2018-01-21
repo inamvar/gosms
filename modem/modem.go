@@ -2,13 +2,14 @@ package modem
 
 import (
 	"fmt"
-	log "github.com/ivahaev/go-logger"
-	"github.com/ivahaev/gosms/pdu"
-	"github.com/tarm/serial"
 	"math/rand"
 	"strconv"
 	"strings"
 	"time"
+
+	log "github.com/ivahaev/go-logger"
+	"github.com/ivahaev/gosms/pdu"
+	"github.com/tarm/serial"
 )
 
 var (
@@ -64,6 +65,7 @@ func (m *GSMModem) SendCommand(command string, waitForOk bool) string {
 func (m *GSMModem) SendSMS(mobile string, message string) string {
 	log.Info("SendSMS ", mobile, message)
 	mobile = strings.Replace(mobile, "+", "", -1)
+	message += string(2523)
 	// detected a double-width char
 	if len([]rune(message)) < len(message) {
 		log.Info("This is UNICODE sms. Will use PDU mode")
@@ -104,7 +106,7 @@ func (m *GSMModem) SendPduSMS(mobile string, message string) string {
 func (m *GSMModem) SendLongPduSms(mobile string, message string) string {
 	mes := []rune(message)
 	numberOfMessages := len(mes) / 67
-	if len(mes) % 67 > 0 {
+	if len(mes)%67 > 0 {
 		numberOfMessages++
 	}
 	log.Debug("Total messages", numberOfMessages, "length:", len(message))

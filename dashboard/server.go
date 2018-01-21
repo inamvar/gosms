@@ -3,14 +3,15 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/ivahaev/gosms"
-	"github.com/gorilla/mux"
-	"github.com/satori/go.uuid"
 	"html/template"
-	log "github.com/ivahaev/go-logger"
 	"net/http"
 	"path/filepath"
 	"time"
+
+	"github.com/gorilla/mux"
+	log "github.com/ivahaev/go-logger"
+	"github.com/ivahaev/gosms"
+	"github.com/satori/go.uuid"
 )
 
 //reposne structure to /sms
@@ -64,7 +65,7 @@ func sendSMSHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	mobile := r.FormValue("mobile")
 	message := r.FormValue("message")
-	uuid := uuid.NewV4()
+	uuid, _ := uuid.NewV4()
 	sms := &gosms.SMS{UUID: uuid.String(), Mobile: mobile, Body: message, Retries: 0, CreatedAt: time.Now()}
 	gosms.EnqueueMessage(sms, true)
 
